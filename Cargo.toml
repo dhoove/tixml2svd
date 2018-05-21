@@ -1,0 +1,19 @@
+[package]
+name = "tixml2svd"
+version = "0.1.0"
+authors = ["David Hoover <rust@hoover.li>"]
+description = "A utility that converts Texas-Instruments device descriptions to standard SVD files"
+keywords = ["arm", "cortex-m", "register", "map", "generator", "svd"]
+categories = ["command-line-utilities", "embedded", "hardware-support", "no-std"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dhoover/tixml2svd"
+
+[[bin]]
+name = "tixml2svd"
+path = "src/main.rs"
+doc = false
+
+[dependencies]
+xml-rs = "0.8.0"
+clap = "2.31.0"
+
