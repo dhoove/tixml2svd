@@ -18,10 +18,17 @@ the registers belonging to a peripheral.
 
 ## Usage
 
-Something like `tixml2svd -i cc1310f128.xml -o cc1310f128.svd` should
-do the trick. If this does not work, try one of the device peripherals
-first, with something like `tixml2svd -p -i
-Modules/CC26xx/CC2652/PRCM.xml`
+Note: you must first remove any byte-order-mark (BOM) from your device
+file. This is a sequence of invisible bytes that appears at the
+beginning of certain text files. One way to do this is with the GNU
+sed commande, issued from a bash prompt:
+
+`sed $'1s/^\uFEFF//' < device.xml > device_wo_bom.xml`
+
+Now, process your device file with something like `tixml2svd -i
+cc2652r1f.xml`. If this does not work, try one of the device
+peripherals all by itself, with something like `tixml2svd -p -i
+Modules/CC26xx/CC2652/PRCM.xml`.
 
 ## Caveats
 
@@ -31,8 +38,8 @@ original TIXML file, it works fine.
 
 For the moment, this utility does not generate SVD device
 headers. This will require a little research on your part. This is an
-example of the information you will need to dig up for your part (this
-header is sufficient for the Segger Ozone debugger).
+example of the information you will need to dig up (the following
+header provides sufficient information for the Segger Ozone debugger).
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>

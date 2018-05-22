@@ -23,7 +23,8 @@ fn main() {
 fn main_() -> std::io::Result<()> {
     let matches = clap::App::new("tixml2svd")
         .version("0.1")
-        .about("Convert Texas-Instruments device xml data into SVD format")
+        .about("Convert Texas-Instruments device xml data into SVD format.\n\
+Remove any byte-order-mark (BOM) from your file before processing.")
         .arg(clap::Arg::with_name("input")
              .short("i")
              .long("input")
