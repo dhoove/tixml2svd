@@ -9,6 +9,7 @@ use xml::reader;
 use xml::writer;
 use xml::writer::EmitterConfig;
 use std::error::Error;
+use std::collections::HashSet;
 
 use std::io;
 
@@ -28,16 +29,19 @@ pub struct Args {
     verbose: u32,
     // Expect a peripheral file instead of a device file.
     peripheral_only: bool,
+    // Prepare SVD for svd2rust
+    svd2rust: bool,
     // If there are several CPUs, read peripherals from CPU 0, 1, or 2, for example.
     cpunum: u32,
 }
 
 impl Args {
-    pub fn new(silent: bool, verbose: u32, peripheral_only: bool, cpunum: u32) -> Args {
+    pub fn new(silent: bool, verbose: u32, peripheral_only: bool, svd2rust: bool, cpunum: u32) -> Args {
         let a = Args { silent,
-                        verbose,
-                        peripheral_only,
-                        cpunum,
+                       verbose,
+                       peripheral_only,
+                       svd2rust,
+                       cpunum,
         };
         a
     }
@@ -128,7 +132,7 @@ pub fn process_device<I, O>(args: &Args, fin: I, root_path: &str, fout: &mut O) 
     let mut xml_out = EmitterConfig::new().perform_indent(true).create_writer(fout);
     let parser = EventReader::new(fin);
 
-    process_device_base(args, parser, &mut xml_out, root_path, &get_parser_from_filename)
+    process_device_base(args, parser, &mut xml_out, &|x| get_parser_from_filename(root_path, x))
 }
 
 /// Convert a TIXML device to SVD.
@@ -136,8 +140,7 @@ pub fn process_device_base<I, O>(
     args: &Args,
     parser: xml::EventReader<I>,
     mut xml_out: &mut xml::EventWriter<&mut O>,
-    root_path: &str,
-    fname2parser: &Fn(&str, &str) -> io::Result<xml::EventReader<std::fs::File>>
+    fname2parser: &Fn(&str) -> io::Result<xml::EventReader<std::fs::File>>
 ) -> io::Result<()> where
     I: io::Read,
     O: io::Write,
@@ -156,6 +159,23 @@ pub fn process_device_base<I, O>(
                 match local_name.as_ref() {
                     "device" => {
                         write_start(args, &mut xml_out, "device")?;
+                        write_tag(args, &mut xml_out, "name", "CC2652")?;
+                        write_tag(args, &mut xml_out, "version", "1.1")?;
+                        write_tag(args, &mut xml_out, "description", "CC2652")?;
+                        write_start(args, &mut xml_out, "cpu")?;
+                        write_tag(args, &mut xml_out, "name", "CM4")?;
+                        write_tag(args, &mut xml_out, "revision", "r1p0")?;
+                        write_tag(args, &mut xml_out, "endian", "little")?;
+                        write_tag(args, &mut xml_out, "mpuPresent", "true")?;
+                        write_tag(args, &mut xml_out, "fpuPresent", "true")?;
+                        write_tag(args, &mut xml_out, "nvicPrioBits", "3")?;
+                        write_tag(args, &mut xml_out, "vendorSystickConfig", "false")?;
+                        write_end(args, &mut xml_out)?;
+                        write_tag(args, &mut xml_out, "addressUnitBits", "8")?;
+                        write_tag(args, &mut xml_out, "width", "32")?;
+                        write_tag(args, &mut xml_out, "size", "32")?;
+                        write_tag(args, &mut xml_out, "access", "read-write")?;
+                        write_tag(args, &mut xml_out, "resetMask", "0xFFFFFFFF")?;
                     },
                     "cpu" => {
                         in_cpu_tag = true;
@@ -227,7 +247,7 @@ pub fn process_device_base<I, O>(
                                     if !args.silent {
                                         eprintln!("Processing peripheral file: {:?}", &href);
                                     }
-                                    let parser = fname2parser(root_path, &href)?;
+                                    let parser = fname2parser(&href)?;
                                     process_peripheral_base(&args, parser, &mut xml_out)?;
                                 }
 
@@ -299,7 +319,7 @@ pub fn process_peripheral<I, O>(args: &Args, fin: I, fout: &mut O) -> io::Result
 pub fn process_peripheral_base<I, O>(
     args: &Args,
     parser: xml::EventReader<I>,
-    mut xml_out: &mut xml::EventWriter<&mut O>
+    mut xml_out: &mut xml::EventWriter<&mut O>,
 ) -> io::Result<()> where
     I: io::Read,
     O: io::Write,
@@ -316,6 +336,10 @@ pub fn process_peripheral_base<I, O>(
 
     let mut register_reset_value = None;
 
+    let mut f_used_registers = None;
+
+    let mut f_used_enumerations = None;
+    
     for e in parser {
         match e {
             Ok(StartElement { name, attributes, namespace: _ }) => {
@@ -325,6 +349,10 @@ pub fn process_peripheral_base<I, O>(
                 let OwnedName { local_name, .. } = name;
                 match local_name.as_ref() {
                     "module" => {
+                        if args.svd2rust {
+                            f_used_registers = Some(HashSet::new());
+                        }
+                        
                         if args.peripheral_only {
                             write_start(args, &mut xml_out, "peripheral")?;
                         }
@@ -358,6 +386,14 @@ pub fn process_peripheral_base<I, O>(
                     },
                     
                     "register" => {
+                        let mut f_id: Option<String> = None;
+                        let mut f_value: Option<String> = None;
+                        let mut f_width: Option<String> = None;
+                        let mut f_description: Option<String> = None;
+                        let mut f_rwaccess: Option<String> = None;
+                        let mut f_offset: Option<String> = None;
+                        let mut f_resetval: Option<String> = None;
+
                         if !printed_registers_tag {
                             printed_registers_tag = true;
                             write_start(args, &mut xml_out, "registers")?;
@@ -371,27 +407,62 @@ pub fn process_peripheral_base<I, O>(
                             let xml::attribute::OwnedAttribute { name, value } = attr;
                             let OwnedName { local_name: attr_name, .. } = name;
                             match attr_name.as_ref() {
-                                "id" => { write_tag(args, &mut xml_out, "name", &value)?; },
-                                "value" => { write_tag(args, &mut xml_out, "value", &value)?; },
-                                "width" => {
-                                    let w: u32 = value.parse().unwrap();
-                                    register_width = Some(w);
-                                    write_tag(args, &mut xml_out, "size", &value)?;
-                                },
+                                "id" => if value.len() > 0 { f_id = Some(value) },
+                                "value" => if value.len() > 0 { f_value = Some(value) },
+                                "width" => if value.len() > 0 { f_width = Some(value) },
                                 "acronym" => (),
-                                "description" => { write_tag(args, &mut xml_out, "description", &value)?; },
-                                "rwaccess" => { write_access(args, &mut xml_out, &value)?; },
-                                "offset" => { write_tag(args, &mut xml_out, "addressOffset", &value)?; },
-                                "resetval" => {
-                                    let resetval: u64 = value.parse().unwrap();
-                                    register_reset_value = Some(resetval);
-                                },
+                                "description" => if value.len() > 0 { f_description = Some(value) },
+                                "rwaccess" => if value.len() > 0 { f_rwaccess = Some(value) },
+                                "offset" => if value.len() > 0 { f_offset = Some(value) },
+                                "resetval" => if value.len() > 0 { f_resetval = Some(value) },
                                 unknown => {
                                     if args.verbose > 0 {
                                         eprintln!("Ignoring unknown key '{}' for '{}'", unknown, local_name);
                                     };
                                 },
                             };
+                        }
+
+                        if let Some(id) = f_id.clone() {
+                            let unique_name = match f_used_registers {
+                                Some(ref mut used_registers) => {
+                                    let mut regname = id;
+                                    while !used_registers.insert(regname.clone()) {
+                                        eprintln!("Non-unique register name {}. Appending underline.", regname);
+                                        regname.push('_');
+                                    }
+                                    regname
+                                },
+                                None => id,
+                            };
+                            write_tag(args, &mut xml_out, "name", &unique_name)?;
+                        }
+                        if let Some(value) = f_value {
+                            write_tag(args, &mut xml_out, "value", &value)?;
+                        }
+                        if let Some(offset) = f_offset {
+                            write_tag(args, &mut xml_out, "addressOffset", &offset)?;
+                        }
+                        if let Some(width) = f_width {
+                            let w: u32 = width.parse().unwrap();
+                            register_width = Some(w);
+                            write_tag(args, &mut xml_out, "size", &width)?;
+                        }
+                        if let Some(description) = f_description {
+                            write_tag(args, &mut xml_out, "description", &description)?;
+                        } else {
+                            if let Some(id) = f_id {
+                                write_tag(args, &mut xml_out, "description", &id)?;
+                            } else {
+                                write_tag(args, &mut xml_out, "description", "--")?;
+                            }
+                        }
+                        if let Some(rwaccess) = f_rwaccess {
+                            write_access(args, &mut xml_out, &rwaccess)?;
+                        }
+                        if let Some(resetval) = f_resetval {
+                            let resetval: u64 = resetval.parse().unwrap();
+                            register_reset_value = Some(resetval);
                         }
                     },
                     
@@ -423,7 +494,7 @@ pub fn process_peripheral_base<I, O>(
                                 "width" => if value.len() > 0 { f_width = Some(value) },
                                 "end" => if value.len() > 0 { f_end = Some(value) },
                                 "rwaccess" => if value.len() > 0 { f_rwaccess = Some(value) },
-                                "description" => if value.len() > 0 { f_description = Some(value) },
+                                "description" => if value.len() > 0 { f_description = Some(value) }
                                 "resetval" => {
                                     let resetval: Result<u64, std::num::ParseIntError>;
                                     if value.starts_with("0x") {
@@ -476,7 +547,7 @@ pub fn process_peripheral_base<I, O>(
                                 let desc = format!("[{}:{}] {}", f_begin.clone().unwrap(), f_end.clone().unwrap(), description);
                                 write_tag(args, &mut xml_out, "description", &desc)?;
                             } else {
-                                write_tag(args, &mut xml_out, "description", &description)?;
+                                write_tag(args, &mut xml_out, "description", if description.len() == 0 { "--" } else { &description })?;
                             }
                         }
                         if let Some(width) = f_width {
@@ -498,23 +569,51 @@ pub fn process_peripheral_base<I, O>(
                         if !printed_enumeratedValues_tag {
                             printed_enumeratedValues_tag = true;
                             write_start(args, &mut xml_out, "enumeratedValues")?;
+                            if args.svd2rust {
+                                f_used_enumerations = Some(HashSet::new());
+                            }
                         }
                         
-                        write_start(args, &mut xml_out, "enumeratedValue")?;
+                        let mut f_id: Option<String> = None;
+                        let mut f_value: Option<String> = None;
+                        let mut f_description: Option<String> = None;
+
                         for attr in attributes {
                             let xml::attribute::OwnedAttribute { name, value } = attr;
                             let OwnedName { local_name: attr_name, .. } = name;
                             match attr_name.as_ref() {
-                                "id" => { write_tag(args, &mut xml_out, "name", &value)?; },
-                                "value" => { write_tag(args, &mut xml_out, "value", &value)?; },
+                                "id" => if value.len() > 0 { f_id = Some(value) },
+                                "value" => if value.len() > 0 { f_value = Some(value) },
+                                "description" => if value.len() > 0 { f_description = Some(value) }
                                 "token" => (),
-                                "description" => { write_tag(args, &mut xml_out, "description", &value)?; },
                                 unknown => {
                                     if args.verbose > 0 {
                                         eprintln!("Ignoring unknown key '{}' for '{}'", unknown, local_name);
                                     };
                                 },
                             };
+                        }
+
+                        if let Some(value) = f_value {
+                            let do_it: bool = match f_used_enumerations {
+                                Some(ref mut used_enumerations) => {
+                                    used_enumerations.insert(value.clone())
+                                },
+                                None => true,
+                            };
+                            if do_it {
+                                write_start(args, &mut xml_out, "enumeratedValue")?;
+                                if let Some(id) = f_id {
+                                    write_tag(args, &mut xml_out, "name", &id)?;
+                                }
+                                write_tag(args, &mut xml_out, "value", &value)?;
+                                if let Some(description) = f_description {
+                                    write_tag(args, &mut xml_out, "description", if description.len() == 0 { "--" } else { &description })?;
+                                }
+                                write_end(args, &mut xml_out)?;
+                            } else {
+                                eprintln!("Non-unique enumeration name {}. Ignoring.", value);
+                            }
                         }
                     },
                     unknown =>  {
@@ -532,6 +631,8 @@ pub fn process_peripheral_base<I, O>(
                 match local_name.as_ref() {
                     
                     "module" => {
+                        f_used_registers = None;
+
                         if printed_registers_tag {
                             printed_registers_tag = false;
                             write_end(args, &mut xml_out)?;
@@ -564,12 +665,12 @@ pub fn process_peripheral_base<I, O>(
                         if printed_enumeratedValues_tag {
                             printed_enumeratedValues_tag = false;
                             write_end(args, &mut xml_out)?;
+                            f_used_enumerations = None;
                         }
                         write_end(args, &mut xml_out)?;
                     },
                     
                     "bitenum" => {
-                        write_end(args, &mut xml_out)?;
                     },
                     unknown => {
                         if args.verbose > 0 {

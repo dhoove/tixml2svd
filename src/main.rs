@@ -31,6 +31,12 @@ Remove any byte-order-mark (BOM) from your file before processing.")
              .value_name("FILE")
              .required(true)
              .help("Input xml file"))
+        .arg(clap::Arg::with_name("header")
+             .short("h")
+             .long("header")
+             .value_name("FILE")
+             .required(false)
+             .help("Optional device header filename"))
         .arg(clap::Arg::with_name("cpunum")
              .short("c")
              .long("cpunum")
@@ -40,6 +46,10 @@ Remove any byte-order-mark (BOM) from your file before processing.")
              .short("p")
              .long("peripheral")
              .help("Compile single peripheral file"))
+        .arg(clap::Arg::with_name("svd2rust")
+             .short("2")
+             .long("svd2rust")
+             .help("Adapt file for svd2rust"))
         .arg(clap::Arg::with_name("verbose")
              .short("v")
              .long("verbose")
@@ -57,9 +67,10 @@ Remove any byte-order-mark (BOM) from your file before processing.")
         .map_err(|_| Error::new(ErrorKind::Other, format!("invalid cpunum, must be a valid non-negative integer.")))?;
     
     let args = Args::new(matches.is_present("silent"),
-                           matches.occurrences_of("verbose") as u32,
-                           matches.is_present("peripheral"),
-                           requested_cpunum);
+                         matches.occurrences_of("verbose") as u32,
+                         matches.is_present("peripheral"),
+                         matches.is_present("svd2rust"),
+                         requested_cpunum);
 
     if !matches.is_present("silent") {
         eprintln!("Processing file: {}", fname_in);
@@ -75,6 +86,15 @@ Remove any byte-order-mark (BOM) from your file before processing.")
     if matches.is_present("peripheral") {
         process_peripheral(&args, fd_in, &mut fd_out)
     } else {
+        /*
+        let mut device_header_str = String::new();
+        let mut device_header = None;
+        if let Some(device_header_filename) = matches.value_of("header") {
+            let mut device_header_file = File::open(device_header_filename)?;
+            device_header_file.read_to_string(&mut device_header_str)?;
+            device_header = Some(&device_header_str[..]);
+        }
+         */
         process_device(&args, fd_in, &fname_in, &mut fd_out)
     }
 }
