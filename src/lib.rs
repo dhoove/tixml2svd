@@ -29,18 +29,21 @@ pub struct Args {
     verbose: u32,
     // Expect a peripheral file instead of a device file.
     peripheral_only: bool,
-    // Prepare SVD for svd2rust
-    svd2rust: bool,
+    // Sanitize the SVD file (for svd2rust, for example)
+    sanitize: bool,
+    // Do not generate fake device info in file header
+    no_device_info: bool,
     // If there are several CPUs, read peripherals from CPU 0, 1, or 2, for example.
     cpunum: u32,
 }
 
 impl Args {
-    pub fn new(silent: bool, verbose: u32, peripheral_only: bool, svd2rust: bool, cpunum: u32) -> Args {
+    pub fn new(silent: bool, verbose: u32, peripheral_only: bool, sanitize: bool, no_device_info:bool, cpunum: u32) -> Args {
         let a = Args { silent,
                        verbose,
                        peripheral_only,
-                       svd2rust,
+                       sanitize,
+                       no_device_info,
                        cpunum,
         };
         a
@@ -71,6 +74,19 @@ fn write_start<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, element: 
     let event: writer::XmlEvent = writer::XmlEvent::start_element(element).into();
     if args.verbose > 2 {
         eprintln!("Writing start-tag: {:?}", event);
+    }
+    match xml_out.write(event) {
+        Ok(x) => Ok(x),
+        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.description())),
+    }
+}
+
+fn write_comment<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, data: &str) -> io::Result<()> where
+    O: io::Write,
+{
+    let event: writer::XmlEvent = writer::XmlEvent::comment(data).into();
+    if args.verbose > 2 {
+        eprintln!("Writing comment: {:?}", event);
     }
     match xml_out.write(event) {
         Ok(x) => Ok(x),
@@ -158,24 +174,28 @@ pub fn process_device_base<I, O>(
                 let OwnedName { local_name, namespace: _namespace, prefix: _prefix } = name;
                 match local_name.as_ref() {
                     "device" => {
+                        write_comment(args, &mut xml_out, "Created by tixml2svd; https://github.com/dhoove/tixml2svd")?;
                         write_start(args, &mut xml_out, "device")?;
-                        write_tag(args, &mut xml_out, "name", "CC2652")?;
-                        write_tag(args, &mut xml_out, "version", "1.1")?;
-                        write_tag(args, &mut xml_out, "description", "CC2652")?;
-                        write_start(args, &mut xml_out, "cpu")?;
-                        write_tag(args, &mut xml_out, "name", "CM4")?;
-                        write_tag(args, &mut xml_out, "revision", "r1p0")?;
-                        write_tag(args, &mut xml_out, "endian", "little")?;
-                        write_tag(args, &mut xml_out, "mpuPresent", "true")?;
-                        write_tag(args, &mut xml_out, "fpuPresent", "true")?;
-                        write_tag(args, &mut xml_out, "nvicPrioBits", "3")?;
-                        write_tag(args, &mut xml_out, "vendorSystickConfig", "false")?;
-                        write_end(args, &mut xml_out)?;
-                        write_tag(args, &mut xml_out, "addressUnitBits", "8")?;
-                        write_tag(args, &mut xml_out, "width", "32")?;
-                        write_tag(args, &mut xml_out, "size", "32")?;
-                        write_tag(args, &mut xml_out, "access", "read-write")?;
-                        write_tag(args, &mut xml_out, "resetMask", "0xFFFFFFFF")?;
+
+                        if !args.no_device_info {
+                            write_tag(args, &mut xml_out, "name", "CC2652")?;
+                            write_tag(args, &mut xml_out, "version", "1.1")?;
+                            write_tag(args, &mut xml_out, "description", "CC2652")?;
+                            write_start(args, &mut xml_out, "cpu")?;
+                            write_tag(args, &mut xml_out, "name", "CM4")?;
+                            write_tag(args, &mut xml_out, "revision", "r1p0")?;
+                            write_tag(args, &mut xml_out, "endian", "little")?;
+                            write_tag(args, &mut xml_out, "mpuPresent", "true")?;
+                            write_tag(args, &mut xml_out, "fpuPresent", "true")?;
+                            write_tag(args, &mut xml_out, "nvicPrioBits", "3")?;
+                            write_tag(args, &mut xml_out, "vendorSystickConfig", "false")?;
+                            write_end(args, &mut xml_out)?;
+                            write_tag(args, &mut xml_out, "addressUnitBits", "8")?;
+                            write_tag(args, &mut xml_out, "width", "32")?;
+                            write_tag(args, &mut xml_out, "size", "32")?;
+                            write_tag(args, &mut xml_out, "access", "read-write")?;
+                            write_tag(args, &mut xml_out, "resetMask", "0xFFFFFFFF")?;
+                        }
                     },
                     "cpu" => {
                         in_cpu_tag = true;
@@ -188,21 +208,22 @@ pub fn process_device_base<I, O>(
                         if !in_cpu_tag | (cpunum != args.cpunum) {
                             continue;
                         }
-                        
+
                         let mut f_baseaddr: Option<String> = None;
                         let mut _f_endaddr: Option<String> = None;
                         let mut f_size: Option<String> = None;
                         let mut f_id: Option<String> = None;
                         let mut f_href: Option<String> = None;
-                        
+
                         for attr in attributes {
                             let xml::attribute::OwnedAttribute { name, value } = attr;
+                            let value = if args.sanitize { String::from(value.trim()) } else { value };
                             let OwnedName { local_name: attr_name, .. } = name;
                             match attr_name.as_ref() {
                                 "baseaddr" => if value.len() > 0 { f_baseaddr = Some(value) },
                                 "endaddr" => if value.len() > 0 { _f_endaddr = Some(value) },
                                 "size" => if value.len() > 0 { f_size = Some(value) },
-                                "id" => if value.len() > 0 { f_id = Some(value) },
+                                "id" => if value.len() > 0 { f_id = Some(if args.sanitize { value.replace("-", "_") } else { value } ) },
                                 "href" => if value.len() > 0 { f_href = Some(value) },
                                 unknown => {
                                     if args.verbose > 0 {
@@ -211,50 +232,59 @@ pub fn process_device_base<I, O>(
                                 },
                             };
                         }
-                        
+
+                        let skip = match f_href {
+                            Some(ref href) => !href.clone().starts_with("../Modules/"),
+                            None => true
+                        };
+
                         if let Some(id) = f_id {
                             // If no ID present, ignore the module (TI-internal?)
-                            if id.len() > 0 {
-                                if !printed_peripherals_tag {
-                                    write_start(args, &mut xml_out, "peripherals")?;
-                                    printed_peripherals_tag = true;
-                                }
-                                
-                                write_start(args, &mut xml_out, "peripheral")?;
-                                write_tag(args, &mut xml_out, "name", &id)?;
+                            if skip {
+                                eprintln!("Sub-instance href does not start with Modules, or is missing. Skipping: '{:?}'", id);
+                            } else {
+                                if id.len() > 0 {
+                                    if !printed_peripherals_tag {
+                                        write_start(args, &mut xml_out, "peripherals")?;
+                                        printed_peripherals_tag = true;
+                                    }
 
-                                if let Some(baseaddr) = f_baseaddr {
-                                    write_tag(args, &mut xml_out, "baseAddress", &baseaddr)?;
-                                }
-                                
-                                match f_size {
-                                    Some(size) => {
-                                        write_start(args, &mut xml_out, "addressBlock")?;
-                                        write_tag(args, &mut xml_out, "offset", "0")?;
-                                        write_tag(args, &mut xml_out, "size", &size)?;
-                                        write_tag(args, &mut xml_out, "usage", "registers")?;
-                                        write_end(args, &mut xml_out)?;
-                                    },
-                                    None => {
-                                        if !args.silent {
-                                            eprintln!("Peripheral has no size for {}", local_name);
+                                    write_start(args, &mut xml_out, "peripheral")?;
+                                    write_tag(args, &mut xml_out, "name", &id)?;
+
+                                    if let Some(baseaddr) = f_baseaddr {
+                                        write_tag(args, &mut xml_out, "baseAddress", &baseaddr)?;
+                                    }
+
+                                    match f_size {
+                                        Some(size) => {
+                                            write_start(args, &mut xml_out, "addressBlock")?;
+                                            write_tag(args, &mut xml_out, "offset", "0")?;
+                                            write_tag(args, &mut xml_out, "size", &size)?;
+                                            write_tag(args, &mut xml_out, "usage", "registers")?;
+                                            write_end(args, &mut xml_out)?;
+                                        },
+                                        None => {
+                                            if !args.silent {
+                                                eprintln!("Peripheral has no size for {}", local_name);
+                                            }
                                         }
-                                    }
-                                    
-                                }
-                                
-                                if let Some(href) = f_href {
-                                    if !args.silent {
-                                        eprintln!("Processing peripheral file: {:?}", &href);
-                                    }
-                                    let parser = fname2parser(&href)?;
-                                    process_peripheral_base(&args, parser, &mut xml_out)?;
-                                }
 
-                                write_end(args, &mut xml_out)?;
+                                    }
+
+                                    if let Some(href) = f_href {
+                                        if !args.silent {
+                                            eprintln!("Processing peripheral file: {:?}", &href);
+                                        }
+                                        let parser = fname2parser(&href)?;
+                                        process_peripheral_base(&args, parser, &mut xml_out)?;
+                                    }
+
+                                    write_end(args, &mut xml_out)?;
+                                }
                             }
                         }
-                        
+
                     },
                     unknown => {
                         if args.verbose > 0 {
@@ -278,10 +308,10 @@ pub fn process_device_base<I, O>(
                             if printed_peripherals_tag {
                                 write_end(args, &mut xml_out)?;
                             }
-                            
+
                             printed_peripherals_tag = true;
                         }
-                        
+
                         in_cpu_tag = false;
                         cpunum += 1;
                     },
@@ -339,7 +369,7 @@ pub fn process_peripheral_base<I, O>(
     let mut f_used_registers = None;
 
     let mut f_used_enumerations = None;
-    
+
     for e in parser {
         match e {
             Ok(StartElement { name, attributes, namespace: _ }) => {
@@ -349,16 +379,17 @@ pub fn process_peripheral_base<I, O>(
                 let OwnedName { local_name, .. } = name;
                 match local_name.as_ref() {
                     "module" => {
-                        if args.svd2rust {
+                        if args.sanitize {
                             f_used_registers = Some(HashSet::new());
                         }
-                        
+
                         if args.peripheral_only {
                             write_start(args, &mut xml_out, "peripheral")?;
                         }
                         printed_registers_tag = false;
                         for attr in attributes {
                             let xml::attribute::OwnedAttribute { name, value } = attr;
+                            let value = if args.sanitize { String::from(value.trim()) } else { value };
                             let OwnedName { local_name: attr_name, .. }  = name;
                             match attr_name.as_ref() {
                                 "HW_revision" => (),
@@ -384,7 +415,7 @@ pub fn process_peripheral_base<I, O>(
                             };
                         }
                     },
-                    
+
                     "register" => {
                         let mut f_id: Option<String> = None;
                         let mut f_value: Option<String> = None;
@@ -398,13 +429,14 @@ pub fn process_peripheral_base<I, O>(
                             printed_registers_tag = true;
                             write_start(args, &mut xml_out, "registers")?;
                         }
-                        
+
                         write_start(args, &mut xml_out, "register")?;
                         printed_fields_tag = false;
                         register_reset_value = None;
-                        
+
                         for attr in attributes {
                             let xml::attribute::OwnedAttribute { name, value } = attr;
+                            let value = if args.sanitize { String::from(value.trim()) } else { value };
                             let OwnedName { local_name: attr_name, .. } = name;
                             match attr_name.as_ref() {
                                 "id" => if value.len() > 0 { f_id = Some(value) },
@@ -465,16 +497,16 @@ pub fn process_peripheral_base<I, O>(
                             register_reset_value = Some(resetval);
                         }
                     },
-                    
+
                     "bitfield" => {
                         if !printed_fields_tag {
                             printed_fields_tag = true;
                             write_start(args, &mut xml_out, "fields")?;
                         }
-                        
+
                         write_start(args, &mut xml_out, "field")?;
                         printed_enumeratedValues_tag = false;
-                        
+
                         let mut f_name: Option<String> = None;
                         let mut f_range: Option<String> = None;
                         let mut f_begin: Option<String> = None;
@@ -483,9 +515,10 @@ pub fn process_peripheral_base<I, O>(
                         let mut f_rwaccess: Option<String> = None;
                         let mut f_description: Option<String> = None;
                         let mut f_reset_value: Option<u64> = None;
-                        
+
                         for attr in attributes {
                             let xml::attribute::OwnedAttribute { name, value } = attr;
+                            let value = if args.sanitize { String::from(value.trim()) } else { value };
                             let OwnedName { local_name: attr_name, .. } = name;
                             match attr_name.as_ref() {
                                 "id" => if value.len() > 0 { f_name = Some(value) },
@@ -502,7 +535,11 @@ pub fn process_peripheral_base<I, O>(
                                     } else {
                                         resetval = u64::from_str(&value);
                                     }
-                                    f_reset_value = Some(resetval.unwrap());
+                                    f_reset_value = match resetval {
+                                        Ok(x) => Some(x),
+                                        Err(_e) => None,
+                                    };
+                                    //f_reset_value = Some(resetval.unwrap());
                                 },
                                 unknown => {
                                     if args.verbose > 0 {
@@ -515,7 +552,7 @@ pub fn process_peripheral_base<I, O>(
                             if let Some(shift) = f_end.clone() {
                                 let shift_int = u32::from_str(&shift).unwrap();
                                 let reg_width: u32 = register_width.unwrap_or(32);
-                                
+
                                 if let Some(width) = f_width.clone() {
                                     let width_int = u32::from_str(&width).unwrap();
                                     if shift_int + width_int > reg_width {
@@ -564,22 +601,23 @@ pub fn process_peripheral_base<I, O>(
                             //write_tag(args, &mut xml_out, "{}", process_access(rwaccess.as_ref()));
                         }
                     },
-                    
+
                     "bitenum" => {
                         if !printed_enumeratedValues_tag {
                             printed_enumeratedValues_tag = true;
                             write_start(args, &mut xml_out, "enumeratedValues")?;
-                            if args.svd2rust {
+                            if args.sanitize {
                                 f_used_enumerations = Some(HashSet::new());
                             }
                         }
-                        
+
                         let mut f_id: Option<String> = None;
                         let mut f_value: Option<String> = None;
                         let mut f_description: Option<String> = None;
 
                         for attr in attributes {
                             let xml::attribute::OwnedAttribute { name, value } = attr;
+                            let value = if args.sanitize { String::from(value.trim()) } else { value };
                             let OwnedName { local_name: attr_name, .. } = name;
                             match attr_name.as_ref() {
                                 "id" => if value.len() > 0 { f_id = Some(value) },
@@ -629,7 +667,7 @@ pub fn process_peripheral_base<I, O>(
                 }
                 let OwnedName { local_name, prefix: _, namespace: _ } = name;
                 match local_name.as_ref() {
-                    
+
                     "module" => {
                         f_used_registers = None;
 
@@ -641,13 +679,13 @@ pub fn process_peripheral_base<I, O>(
                             write_end(args, &mut xml_out)?;
                         }
                     },
-                    
+
                     "register" => {
                         if printed_fields_tag {
                             printed_fields_tag = false;
                             write_end(args, &mut xml_out)?;
                         }
-                        
+
                         if let Some(value) = register_reset_value {
                             let hex_reset = format!("0x{:X}", value);
                             write_tag(args, &mut xml_out, "resetValue", &hex_reset )?;
@@ -656,11 +694,11 @@ pub fn process_peripheral_base<I, O>(
                             let rv = "0";
                             write_tag(args, &mut xml_out, "resetValue", &rv )?;
                         }
-                        
+
                         register_width = None;
                         write_end(args, &mut xml_out)?;
                     },
-                    
+
                     "bitfield" => {
                         if printed_enumeratedValues_tag {
                             printed_enumeratedValues_tag = false;
@@ -669,7 +707,7 @@ pub fn process_peripheral_base<I, O>(
                         }
                         write_end(args, &mut xml_out)?;
                     },
-                    
+
                     "bitenum" => {
                     },
                     unknown => {

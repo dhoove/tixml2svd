@@ -1,0 +1,276 @@
+diff -Naur TI_DEVICE_XML.orig/devices/CC430F5123.xml TI_DEVICE_XML/devices/CC430F5123.xml
+--- TI_DEVICE_XML.orig/devices/CC430F5123.xml	2018-06-05 14:09:14.549034860 +0100
++++ TI_DEVICE_XML/devices/CC430F5123.xml	2018-06-05 08:24:58.374723063 +0100
+@@ -62,4 +62,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430F5131.xml TI_DEVICE_XML/devices/MSP430F5131.xml
+--- TI_DEVICE_XML.orig/devices/MSP430F5131.xml	2018-06-05 14:09:14.609034860 +0100
++++ TI_DEVICE_XML/devices/MSP430F5131.xml	2018-06-05 12:42:04.173400064 +0100
+@@ -50,8 +50,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -59,4 +59,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430F5132.xml TI_DEVICE_XML/devices/MSP430F5132.xml
+--- TI_DEVICE_XML.orig/devices/MSP430F5132.xml	2018-06-05 14:09:14.609034860 +0100
++++ TI_DEVICE_XML/devices/MSP430F5132.xml	2018-06-05 13:00:38.761127064 +0100
+@@ -51,8 +51,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -60,4 +60,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430F5151.xml TI_DEVICE_XML/devices/MSP430F5151.xml
+--- TI_DEVICE_XML.orig/devices/MSP430F5151.xml	2018-06-05 14:09:14.609034860 +0100
++++ TI_DEVICE_XML/devices/MSP430F5151.xml	2018-06-05 13:00:44.137127064 +0100
+@@ -50,8 +50,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -59,4 +59,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430F5152.xml TI_DEVICE_XML/devices/MSP430F5152.xml
+--- TI_DEVICE_XML.orig/devices/MSP430F5152.xml	2018-06-05 14:09:14.609034860 +0100
++++ TI_DEVICE_XML/devices/MSP430F5152.xml	2018-06-05 13:00:51.481127064 +0100
+@@ -51,8 +51,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -60,4 +60,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430F5171.xml TI_DEVICE_XML/devices/MSP430F5171.xml
+--- TI_DEVICE_XML.orig/devices/MSP430F5171.xml	2018-06-05 14:09:14.609034860 +0100
++++ TI_DEVICE_XML/devices/MSP430F5171.xml	2018-06-05 13:00:56.425127064 +0100
+@@ -50,8 +50,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -59,4 +59,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430F5172.xml TI_DEVICE_XML/devices/MSP430F5172.xml
+--- TI_DEVICE_XML.orig/devices/MSP430F5172.xml	2018-06-05 14:09:14.609034860 +0100
++++ TI_DEVICE_XML/devices/MSP430F5172.xml	2018-06-05 13:01:02.425127064 +0100
+@@ -51,8 +51,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -60,4 +60,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/MSP430FR2033.xml TI_DEVICE_XML/devices/MSP430FR2033.xml
+--- TI_DEVICE_XML.orig/devices/MSP430FR2033.xml	2018-06-05 14:09:14.685034860 +0100
++++ TI_DEVICE_XML/devices/MSP430FR2033.xml	2018-06-05 13:19:10.086137603 +0100
+@@ -46,14 +46,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Port_D_5.xml" id="Port_D" permissions="p" requestor="MSP430" size="10" xml="Port_D_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Port_7_8_6.xml" id="Port_7_8" permissions="p" requestor="MSP430" size="10" xml="Port_7_8_6.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Real-Time_Clock_1.xml" id="Real-Time_Clock" permissions="p" requestor="MSP430" size="10" xml="Real-Time_Clock_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/SFR__Special_Function_Registers_3.xml" id="SFR__Special_Function_Registers" permissions="p" requestor="MSP430" size="10" xml="SFR__Special_Function_Registers_3.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/SYS__System_Module_4.xml" id="SYS__System_Module" permissions="p" requestor="MSP430" size="10" xml="SYS__System_Module_4.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_5.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_5.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_A3_5.xml" id="Timer1_A3" permissions="p" requestor="MSP430" size="10" xml="Timer1_A3_5.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_5.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_5.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_5.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_5.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__SPI_Mode_5.xml" id="USCI_B0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__SPI_Mode_5.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_6.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_6.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_3.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_3.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/RF430F5144.xml TI_DEVICE_XML/devices/RF430F5144.xml
+--- TI_DEVICE_XML.orig/devices/RF430F5144.xml	2018-06-05 14:09:14.745034860 +0100
++++ TI_DEVICE_XML/devices/RF430F5144.xml	2018-06-05 13:01:11.721127064 +0100
+@@ -51,8 +51,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -60,4 +60,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/RF430F5155.xml TI_DEVICE_XML/devices/RF430F5155.xml
+--- TI_DEVICE_XML.orig/devices/RF430F5155.xml	2018-06-05 14:09:14.745034860 +0100
++++ TI_DEVICE_XML/devices/RF430F5155.xml	2018-06-05 13:00:28.441127064 +0100
+@@ -51,8 +51,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -60,4 +60,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/devices/RF430F5175.xml TI_DEVICE_XML/devices/RF430F5175.xml
+--- TI_DEVICE_XML.orig/devices/RF430F5175.xml	2018-06-05 14:09:14.745034860 +0100
++++ TI_DEVICE_XML/devices/RF430F5175.xml	2018-06-05 12:59:45.273127064 +0100
+@@ -51,8 +51,8 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_A3_3.xml" id="Timer0_A3" permissions="p" requestor="MSP430" size="10" xml="Timer0_A3_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer0_D3_1.xml" id="Timer0_D3" permissions="p" requestor="MSP430" size="10" xml="Timer0_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer1_D3_1.xml" id="Timer1_D3" permissions="p" requestor="MSP430" size="10" xml="Timer1_D3_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
+-<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_1.xml" id="Timer_Event_Control_1" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_1.xml" xmlpath="../Modules/msp430/"></instance>
++<instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Timer_Event_Control_2.xml" id="Timer_Event_Control_2" permissions="p" requestor="MSP430" size="10" xml="Timer_Event_Control_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/UCS__Unified_System_Clock_5.xml" id="UCS__Unified_System_Clock" permissions="p" requestor="MSP430" size="10" xml="UCS__Unified_System_Clock_5.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__UART_Mode_2.xml" id="USCI_A0__UART_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__UART_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_A0__SPI_Mode_2.xml" id="USCI_A0__SPI_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_A0__SPI_Mode_2.xml" xmlpath="../Modules/msp430/"></instance>
+@@ -60,4 +60,4 @@
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/USCI_B0__I2C_Mode_3.xml" id="USCI_B0__I2C_Mode" permissions="p" requestor="MSP430" size="10" xml="USCI_B0__I2C_Mode_3.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="2" baseaddr="0x0000" description="" href="../Modules/msp430/Watchdog_Timer_2.xml" id="Watchdog_Timer" permissions="p" requestor="MSP430" size="10" xml="Watchdog_Timer_2.xml" xmlpath="../Modules/msp430/"></instance>
+ <instance HW_revision="1.0" accessnumbytes="4" baseaddr="0x0000" description="" href="../Modules/msp430/MSP430Xv2_NotVisible.xml" id="" permissions="p" requestor="MSP430" size="00" xml="MSP430Xv2_NotVisible.xml" xmlpath="../Modules/msp430/"></instance>
+-</cpu></device>
+\ No newline at end of file
++</cpu></device>
+diff -Naur TI_DEVICE_XML.orig/Modules/CC26xx/CC2652/CRYPTO.xml TI_DEVICE_XML/Modules/CC26xx/CC2652/CRYPTO.xml
+--- TI_DEVICE_XML.orig/Modules/CC26xx/CC2652/CRYPTO.xml	2018-06-05 14:09:14.293034860 +0100
++++ TI_DEVICE_XML/Modules/CC26xx/CC2652/CRYPTO.xml	2018-06-05 07:32:50.838139064 +0100
+@@ -1238,14 +1238,14 @@
+    </register>
+    <register acronym="ALGSEL" width="32" description="Algorithm Select
+ This algorithm selection register configures the internal destination of the DMA controller." id="ALGSEL" offset="0x700">
+-      <bitfield range="" begin="32" width="1" end="32" rwaccess="RW" description="If set to one, selects the hash engine in 512B mode as destination for the DMA
++      <bitfield range="" begin="31" width="1" end="31" rwaccess="RW" description="If set to one, selects the hash engine in 512B mode as destination for the DMA
+ The maximum transfer size to DMA engine is set to 64 bytes for reading and 32 bytes for writing (the latter is only applicable if the hash result is written out through the DMA)." id="HASH_SHA_512" resetval="0x0">
+       </bitfield>
+-      <bitfield range="" begin="31" width="1" end="31" rwaccess="RW" description="If this bit is cleared to 0, the DMA operation involves only data.
++      <bitfield range="" begin="30" width="1" end="30" rwaccess="RW" description="If this bit is cleared to 0, the DMA operation involves only data.
+ If this bit is set, the DMA operation includes a TAG (Authentication Result / Digest).
+ For SHA-256 operation, a DMA must be set up for both input data and TAG. For any other selected module, setting this bit only allows a DMA that reads the TAG. No data allowed to be transferred to or from the selected module via the DMA." id="TAG" resetval="0x0">
+       </bitfield>
+-      <bitfield range="" begin="30" width="27" end="4" rwaccess="RW" description="Software should not rely on the value of a reserved. Writing any other value than the reset value may result in undefined behavior." id="RESERVED4" resetval="0x0">
++      <bitfield range="" begin="29" width="26" end="4" rwaccess="RW" description="Software should not rely on the value of a reserved. Writing any other value than the reset value may result in undefined behavior." id="RESERVED4" resetval="0x0">
+       </bitfield>
+       <bitfield range="" begin="2" width="1" end="2" rwaccess="RW" description="If set to one, selects the hash engine in 256B mode as destination for the DMA
+ The maximum transfer size to DMA engine is set to 64 bytes for reading and 32 bytes for writing (the latter is only applicable if the hash result is written out through the DMA)." id="HASH_SHA_256" resetval="0x0">
+diff -Naur TI_DEVICE_XML.orig/Modules/msp430/RTC_C_208.0.xml TI_DEVICE_XML/Modules/msp430/RTC_C_208.0.xml
+--- TI_DEVICE_XML.orig/Modules/msp430/RTC_C_208.0.xml	2018-06-05 14:09:14.477034860 +0100
++++ TI_DEVICE_XML/Modules/msp430/RTC_C_208.0.xml	2018-06-05 12:54:44.893127064 +0100
+@@ -28,9 +28,9 @@
+         </bitfield>
+         <bitfield id="RTCSSEL" description="Real-time clock source select" begin="3" end="2" width="2" rwaccess="R/W">
+             <bitenum id="LFXT" value="0x0" description="32-kHz crystal oscillator clock"/>
+-            <bitenum id="LFXT" value="0x1" description="32-kHz crystal oscillator clock"/>
++            <bitenum id="LFXT_" value="0x1" description="32-kHz crystal oscillator clock"/>
+             <bitenum id="RT1PS" value="0x2" description="Output from RT1PS"/>
+-            <bitenum id="RT1PS" value="0x3" description="Output from RT1PS"/>
++            <bitenum id="RT1PS_" value="0x3" description="Output from RT1PS"/>
+         </bitfield>
+         <bitfield id="RTCRDY" description="Real-time clock ready" begin="4" end="4" width="1" rwaccess="R">
+             <bitenum id="RTCRDY_0" value="0x0" description="RTC time values in transition"/>
+@@ -147,7 +147,7 @@
+             <bitenum id="RT1SSEL_0" value="0x0" description="32-kHz crystal oscillator clock"/>
+             <bitenum id="RT1SSEL_1" value="0x1" description="32-kHz crystal oscillator clock"/>
+             <bitenum id="RT0PS" value="0x2" description="Output from RT0PS"/>
+-            <bitenum id="RT0PS" value="0x3" description="Output from RT0PS"/>
++            <bitenum id="RT0PS_" value="0x3" description="Output from RT0PS"/>
+         </bitfield>
+     </register>
+     <register id="RTCPS" width="16" offset="0xC" internal="0" description="Real-Time Clock Prescale Timer Counter Register">
+diff -Naur TI_DEVICE_XML.orig/Modules/msp430/SAPH_367.0.xml TI_DEVICE_XML/Modules/msp430/SAPH_367.0.xml
+--- TI_DEVICE_XML.orig/Modules/msp430/SAPH_367.0.xml	2018-06-05 14:09:14.481034860 +0100
++++ TI_DEVICE_XML/Modules/msp430/SAPH_367.0.xml	2018-06-05 07:37:24.835069063 +0100
+@@ -283,7 +283,7 @@
+         </bitfield>
+         <bitfield id="TONE" description="Tone generation enable. The frequency of the test tone is determined by LPER and HPER. The test tone persists while PGCTL.TONE = 1 &amp; PGCTL.STOP=0. Either writing 0 to PGCTL.TONE or writing 1  to PGCTL.STOP stops tone generation." begin="14" end="14" width="1" rwaccess="R/W">
+             <bitenum id="DISABLE" value="0x0" description="Test tone generation is disabled.  Note: This bit is automatically cleared when writing '1' to PGCTL.STOP, and it stops test tone generation immediately."/>
+-            <bitenum id="ENABLE" value="0x0" description="Test tone generation is enabled."/>
++            <bitenum id="ENABLE" value="0x1" description="Test tone generation is enabled."/>
+         </bitfield>
+         <bitfield id="PPGSTOP" description="Writing one to this bit stopps the PPG to generate pulses. This bit is cleared automatically." begin="15" end="15" width="1" rwaccess="R/W">
+         </bitfield>

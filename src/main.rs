@@ -46,10 +46,14 @@ Remove any byte-order-mark (BOM) from your file before processing.")
              .short("p")
              .long("peripheral")
              .help("Compile single peripheral file"))
-        .arg(clap::Arg::with_name("svd2rust")
-             .short("2")
-             .long("svd2rust")
-             .help("Adapt file for svd2rust"))
+        .arg(clap::Arg::with_name("sanitize")
+             .short("z")
+             .long("sanitize")
+             .help("Sanitize file for code generation or picky postprocessors"))
+        .arg(clap::Arg::with_name("no_device_info")
+             .short("x")
+             .long("no_device_info")
+             .help("Do not generate fake device info in file header"))
         .arg(clap::Arg::with_name("verbose")
              .short("v")
              .long("verbose")
@@ -65,11 +69,12 @@ Remove any byte-order-mark (BOM) from your file before processing.")
 
     let requested_cpunum = matches.value_of("cpunum").unwrap_or("0").parse::<u32>()
         .map_err(|_| Error::new(ErrorKind::Other, format!("invalid cpunum, must be a valid non-negative integer.")))?;
-    
+
     let args = Args::new(matches.is_present("silent"),
                          matches.occurrences_of("verbose") as u32,
                          matches.is_present("peripheral"),
-                         matches.is_present("svd2rust"),
+                         matches.is_present("sanitize"),
+                         matches.is_present("no_device_info"),
                          requested_cpunum);
 
     if !matches.is_present("silent") {
