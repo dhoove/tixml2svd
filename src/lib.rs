@@ -8,7 +8,6 @@ extern crate xml;
 use xml::reader;
 use xml::writer;
 use xml::writer::EmitterConfig;
-use std::error::Error;
 use std::collections::HashSet;
 
 use std::io;
@@ -77,7 +76,7 @@ fn write_start<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, element: 
     }
     match xml_out.write(event) {
         Ok(x) => Ok(x),
-        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.description())),
+        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.to_string())),
     }
 }
 
@@ -90,7 +89,7 @@ fn write_comment<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, data: &
     }
     match xml_out.write(event) {
         Ok(x) => Ok(x),
-        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.description())),
+        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.to_string())),
     }
 }
 
@@ -103,7 +102,7 @@ fn write_content<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, content
     }
     match xml_out.write(event) {
         Ok(x) => Ok(x),
-        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.description())),
+        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.to_string())),
     }
 }
 
@@ -116,7 +115,7 @@ fn write_end<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>) -> io::Resu
     }
     match xml_out.write(event) {
         Ok(x) => Ok(x),
-        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.description())),
+        Err(x) => Err(io::Error::new(io::ErrorKind::Other, x.to_string())),
     }
 }
 
@@ -156,7 +155,7 @@ pub fn process_device_base<I, O>(
     args: &Args,
     parser: xml::EventReader<I>,
     mut xml_out: &mut xml::EventWriter<&mut O>,
-    fname2parser: &Fn(&str) -> io::Result<xml::EventReader<std::fs::File>>
+    fname2parser: &dyn Fn(&str) -> io::Result<xml::EventReader<std::fs::File>>
 ) -> io::Result<()> where
     I: io::Read,
     O: io::Write,
@@ -326,7 +325,7 @@ pub fn process_device_base<I, O>(
             },
 
             Err(e) => {
-                return Err(io::Error::new(io::ErrorKind::Other, e.description()));
+                return Err(io::Error::new(io::ErrorKind::Other, e.to_string()));
             },
             _ => {}
         }
@@ -718,7 +717,7 @@ pub fn process_peripheral_base<I, O>(
                 };
             }
             Err(e) => {
-                return Err(io::Error::new(io::ErrorKind::Other, e.description()));
+                return Err(io::Error::new(io::ErrorKind::Other, e.to_string()));
             }
             _ => {}
         }
