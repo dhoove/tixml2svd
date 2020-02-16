@@ -6,7 +6,8 @@ extern crate tixml2svd;
 use tixml2svd::{Args, process_peripheral, process_device};
 
 use std::fs::File;
-use std::io::{Error, ErrorKind};
+use std::io::{Error, ErrorKind, Seek, SeekFrom};
+use unicode_bom::Bom;
 
 
 fn main() {
@@ -23,8 +24,7 @@ fn main() {
 fn main_() -> std::io::Result<()> {
     let matches = clap::App::new("tixml2svd")
         .version("0.1")
-        .about("Convert Texas-Instruments device xml data into SVD format.\n\
-Remove any byte-order-mark (BOM) from your file before processing.")
+        .about("Convert Texas-Instruments device xml data into SVD format.")
         .arg(clap::Arg::with_name("input")
              .short("i")
              .long("input")
@@ -81,10 +81,16 @@ Remove any byte-order-mark (BOM) from your file before processing.")
         eprintln!("Processing file: {}", fname_in);
     }
 
-    //let fd_in = std::io::stdin();
-    let fd_in = File::open(fname_in)?;
+    let mut fd_in = File::open(fname_in)?;
 
-    //let mut fd_out = File::create(fname_out).unwrap();
+    // Some CCXML files contain unicode BOMs; these must be read to avoid
+    // XML parse errors.
+    let bom = Bom::from(&mut fd_in);
+    match bom {
+        Bom::Null | Bom::Utf8 => fd_in.seek(SeekFrom::Start(bom.len() as u64))?,
+        _ => return Err(Error::new(ErrorKind::InvalidData, format!("unsupported Unicode file encoding: {}", bom))),
+    };
+
     let stdout = std::io::stdout();
     let mut fd_out = stdout.lock();
 
