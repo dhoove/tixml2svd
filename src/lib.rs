@@ -5,7 +5,6 @@
 
 extern crate xml;
 
-use xml::reader;
 use xml::writer;
 use xml::writer::EmitterConfig;
 use std::collections::HashSet;
@@ -17,8 +16,9 @@ use std::path::Path;
 use std::str::FromStr;
 
 use xml::reader::EventReader;
+use xml::attribute::OwnedAttribute;
 use xml::name::OwnedName;
-use reader::XmlEvent::{StartElement, EndElement};
+use xml::reader::XmlEvent::{StartElement, EndElement};
 
 /// This structure contains arguments used to customize the behavior of tixml2svd.
 pub struct Args {
@@ -139,6 +139,95 @@ pub fn get_parser_from_filename(root: &str, filename: &str) -> io::Result<xml::E
     Ok(EventReader::new(fd_periph))
 }
 
+/// Used by process_device_base to convert the TIXML <device> header
+/// to the corresponding SVD <device> fields.
+fn generate_device<O>(
+    args: &Args,
+    mut xml_out: &mut xml::EventWriter<&mut O>,
+    device_attributes: &Vec<OwnedAttribute>,
+    cpu_attributes: &Vec<OwnedAttribute>,
+    endianness: &Option<String>,
+) -> io::Result<()> where
+    O: io::Write,
+{
+    if args.no_device_info {
+        return Ok(());
+    }
+
+    let mut f_id: Option<&str> = None;
+    let mut f_hw_revision: Option<&str> = None;
+    let mut f_description: Option<&str> = None;
+    let mut f_isa: Option<String> = None;
+
+    for attr in device_attributes {
+        let xml::attribute::OwnedAttribute { name, value } = attr;
+        let OwnedName { local_name: attr_name, .. } = name;
+        match attr_name.as_ref() {
+            "id" => if value.len() > 0 { f_id = Some(&value) },
+            "description" => if value.len() > 0 { f_description = Some(&value) },
+            _ => {},
+        }
+    }
+
+    for attr in cpu_attributes {
+        let xml::attribute::OwnedAttribute { name, value } = attr;
+        let OwnedName { local_name: attr_name, .. } = name;
+        match attr_name.as_ref() {
+            "HW_revision" => if value.len() > 0 { f_hw_revision = Some(&value) },
+            "isa" => if value.len() > 0 { f_isa = Some(
+                if args.sanitize {
+                    value.replace("Cortex_", "C")
+                } else {
+                    value.to_string()
+                })
+            },
+            _ => {},
+        }
+    }
+
+    write_tag(args, &mut xml_out, "name", f_id.unwrap_or("[unknown CPU]"))?;
+    write_tag(args, &mut xml_out, "version", f_hw_revision.unwrap_or("0.0"))?;
+    write_tag(args, &mut xml_out, "description", f_description.unwrap_or(""))?;
+    write_start(args, &mut xml_out, "cpu")?;
+    write_tag(args, &mut xml_out, "name", f_isa.as_deref().unwrap_or("other"))?;
+    write_tag(args, &mut xml_out, "revision", f_hw_revision.unwrap_or("0.0"))?;
+    write_tag(args, &mut xml_out, "endian", endianness.as_deref().unwrap_or("other"))?;
+    write_tag(args, &mut xml_out, "mpuPresent", "true")?;
+    write_tag(args, &mut xml_out, "fpuPresent", "true")?;
+    write_tag(args, &mut xml_out, "nvicPrioBits", "3")?;
+    write_tag(args, &mut xml_out, "vendorSystickConfig", "false")?;
+    write_end(args, &mut xml_out)?;
+    write_tag(args, &mut xml_out, "addressUnitBits", "8")?;
+    write_tag(args, &mut xml_out, "width", "32")?;
+    write_tag(args, &mut xml_out, "size", "32")?;
+    write_tag(args, &mut xml_out, "access", "read-write")?;
+    write_tag(args, &mut xml_out, "resetValue", "0x00000000")?;
+    write_tag(args, &mut xml_out, "resetMask", "0xFFFFFFFF")
+}
+
+fn check_endianness(args: &Args, attributes: &Vec<OwnedAttribute>) -> Option<String> {
+    let mut f_type: Option<&str> = None;
+    let mut f_value: Option<&str> = None;
+    let mut f_id: Option<&str> = None;
+
+    for attr in attributes {
+        let xml::attribute::OwnedAttribute { name, value } = attr;
+        let value = if args.sanitize { value.trim() } else { value };
+        let OwnedName { local_name: attr_name, .. } = name;
+        match attr_name.as_ref() {
+            "Type" => if value.len() > 0 { f_type = Some(value) },
+            "Value" => if value.len() > 0 { f_value = Some(value) },
+            "id" => if value.len() > 0 { f_id = Some(value) },
+            _ => {},
+        }
+    }
+
+    f_type.filter(|t| *t == "stringfield")
+        .and(f_id.filter(|t| *t == "Endianness"))
+        .and(f_value)
+        .map(|e| e.to_string())
+}
+
 /// Convert a TIXML device to SVD.
 pub fn process_device<I, O>(args: &Args, fin: I, root_path: &str, fout: &mut O) -> io::Result<()> where
     I: io::Read,
@@ -163,6 +252,8 @@ pub fn process_device_base<I, O>(
     let mut printed_peripherals_tag = true;
     let mut in_cpu_tag = false;
     let mut cpunum = 0;
+    let mut endianness: Option<String> = None;
+    let mut device_attributes: Vec<OwnedAttribute> = vec!();
 
     for e in parser {
         match e {
@@ -170,38 +261,28 @@ pub fn process_device_base<I, O>(
                 if args.verbose > 0 {
                     eprintln!("Processing StartElement: {}", name);
                 }
-                let OwnedName { local_name, namespace: _namespace, prefix: _prefix } = name;
+                let OwnedName { local_name, namespace: _, prefix: _ } = name;
                 match local_name.as_ref() {
                     "device" => {
-                        write_comment(args, &mut xml_out, "Created by tixml2svd; https://github.com/dhoove/tixml2svd")?;
                         write_start(args, &mut xml_out, "device")?;
+                        write_comment(args, &mut xml_out, "Created by tixml2svd; https://github.com/dhoove/tixml2svd")?;
 
-                        if !args.no_device_info {
-                            write_tag(args, &mut xml_out, "name", "CC2652")?;
-                            write_tag(args, &mut xml_out, "version", "1.1")?;
-                            write_tag(args, &mut xml_out, "description", "CC2652")?;
-                            write_start(args, &mut xml_out, "cpu")?;
-                            write_tag(args, &mut xml_out, "name", "CM4")?;
-                            write_tag(args, &mut xml_out, "revision", "r1p0")?;
-                            write_tag(args, &mut xml_out, "endian", "little")?;
-                            write_tag(args, &mut xml_out, "mpuPresent", "true")?;
-                            write_tag(args, &mut xml_out, "fpuPresent", "true")?;
-                            write_tag(args, &mut xml_out, "nvicPrioBits", "3")?;
-                            write_tag(args, &mut xml_out, "vendorSystickConfig", "false")?;
-                            write_end(args, &mut xml_out)?;
-                            write_tag(args, &mut xml_out, "addressUnitBits", "8")?;
-                            write_tag(args, &mut xml_out, "width", "32")?;
-                            write_tag(args, &mut xml_out, "size", "32")?;
-                            write_tag(args, &mut xml_out, "access", "read-write")?;
-                            write_tag(args, &mut xml_out, "resetMask", "0xFFFFFFFF")?;
-                        }
+                        device_attributes = attributes;
                     },
                     "cpu" => {
                         in_cpu_tag = true;
                         if cpunum != args.cpunum {
                             continue;
                         }
+                        generate_device(args, &mut xml_out, &device_attributes, &attributes, &endianness)?;
                         printed_peripherals_tag = false;
+                    },
+                    "property" => {
+                        if !in_cpu_tag {
+                            continue;
+                        }
+
+                        endianness = endianness.or_else(|| check_endianness(args, &attributes));
                     },
                     "instance" => {
                         if !in_cpu_tag | (cpunum != args.cpunum) {
