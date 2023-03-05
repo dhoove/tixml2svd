@@ -7,6 +7,7 @@ keywords = ["arm", "cortex-m", "register", "generator", "svd"]
 categories = ["command-line-utilities", "embedded", "hardware-support", "no-std"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/dhoove/tixml2svd"
+edition = "2018"
 
 [[bin]]
 name = "tixml2svd"
@@ -14,6 +15,7 @@ path = "src/main.rs"
 doc = false
 
 [dependencies]
+clap = "2.33.0"
+unicode-bom = "1.1.4"
 xml-rs = "0.8.0"
-clap = "2.31.0"
 

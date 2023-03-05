@@ -18,21 +18,15 @@ the registers belonging to a peripheral.
 
 ## Usage
 
-Note: tixml2svd requires you to first remove any byte-order-mark (BOM)
-from your device file. This is a sequence of invisible bytes that
-appears at the beginning of certain text files.
-
 Here is an one way to copy the device and Module directories into a
-local work directory, convert the line endings of all files to unix
-platform line endings, and remove the BOM:
+local work directory and convert the line endings of all files to unix
+platform line endings:
 
 ```
 mkdir tmp
 cp -r /media/sf_ti/ccsv8/ccs_base/common/targetdb/devices tmp
 cp -r /media/sf_ti/ccsv8/ccs_base/common/targetdb/Modules tmp
 find tmp -type f -exec dos2unix \{\} \;
-cd tmp
-find devices -name \*.xml -exec sed -i '1s/^\xEF\xBB\xBF//' \{\} \;
 ```
 
 Now, process a device file with something like `tixml2svd -z -i
