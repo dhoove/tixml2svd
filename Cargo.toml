@@ -1,6 +1,6 @@
 [package]
 name = "tixml2svd"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["David Hoover <rust@hoover.li>"]
 description = "A utility that converts Texas-Instruments device descriptions to standard SVD files"
 keywords = ["arm", "cortex-m", "register", "generator", "svd"]
