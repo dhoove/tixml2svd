@@ -6,13 +6,13 @@ files from the Texas-Instruments XML (called TIXML from now on) device
 and peripheral descriptor files.
 
 Device descriptor files are generally found in the
-ccsv8/ccs_base/common/targetdb/devices directory of a TI Code Composer
+ccsxxxx/ccs/ccs_base/common/targetdb/devices directory of a TI Code Composer
 installation directory. They contain the names and base addresses of
 all of the device's peripherals, as well as a the relative path of
 each peripheral's descriptor file.
 
 Peripheral descriptor files are generally found in the
-ccsv8/ccs_base/common/targetdb/Modules directory of a TI Code Composer
+ccsxxxx/ccs/ccs_base/common/targetdb/Modules directory of a TI Code Composer
 installation directory. They contain the names and addresses of all of
 the registers belonging to a peripheral.
 
@@ -24,8 +24,8 @@ platform line endings:
 
 ```
 mkdir tmp
-cp -r /media/sf_ti/ccsv8/ccs_base/common/targetdb/devices tmp
-cp -r /media/sf_ti/ccsv8/ccs_base/common/targetdb/Modules tmp
+cp -r /ext/ti/ccs1220/ccs/ccs_base/common/targetdb/devices tmp
+cp -r /ext/ti/ccs1220/ccs/ccs_base/common/targetdb/Modules tmp
 find tmp -type f -exec dos2unix \{\} \;
 ```
 
@@ -45,7 +45,7 @@ access code.
 Some of the CCSv8 device files contain errors, ununique peripheral,
 register or field names, or ununique enumeration values. With the
 sanitize option, tixml2svd deals with most of these problems
-automatically, but there are a few exceptions. The following
+automatically, but there are exceptions. The following
 [patch](./doc/ccsv8_dev.diff) file makes it possible to apply
 tixml2svd to all 644 tixml device files on my machine (see below), and
 successfully generate rust code if rust warnings are permitted by your
@@ -54,7 +54,12 @@ svd2rust compile without warnings, but not all of them. The tixml
 files for some devices may contain mistakes that the compiler is
 warning you about.
 
-For the moment, tixml2svd does not generate SVD device headers. By
+Note that some TI register fields contain enumerations
+that do completely fit inside their field. I believe that this is
+done to permit these enumerations to apply to multiple fields, but
+these enumerations will cause svd2rust to exit with an error.
+
+For the moment, tixml2svd does not generate complete SVD device headers. By
 default, it adds a fake device header that you must modify by hand.
 This will require a little research on your part. Here is an example
 of the information you will need to dig up (the following header
@@ -82,7 +87,13 @@ provides sufficient information for the Segger Ozone debugger).
   <resetMask>0xFFFFFFFF</resetMask>
 ```
 
-This is a list of devices that, after
+## Credits
+
+- [nholstein](https://github.com/nholstein): Auto BOM detection, CPU header creation
+
+## Devices
+
+This is an incomplete list of devices that, after
 [patching](./doc/ccsv8_dev.diff), can be converted to SVD:
 
 cc1310f128,
