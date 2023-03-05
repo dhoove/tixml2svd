@@ -286,6 +286,9 @@ pub fn process_device_base<I, O>(
                     },
                     "instance" => {
                         if !in_cpu_tag | (cpunum != args.cpunum) {
+                            if args.verbose > 0 {
+                                eprintln!("Skipping cpu instance; in_cpu_tag='{}', cpunum='{}'", in_cpu_tag, cpunum);
+                            }
                             continue;
                         }
 
@@ -589,9 +592,9 @@ pub fn process_peripheral_base<I, O>(
 
                         let mut f_name: Option<String> = None;
                         let mut f_range: Option<String> = None;
-                        let mut f_begin: Option<String> = None;
-                        let mut f_width: Option<String> = None;
-                        let mut f_end: Option<String> = None;
+                        let mut f_begin: Option<u32> = None;
+                        let mut f_width: Option<u32> = None;
+                        let mut f_end: Option<u32> = None;
                         let mut f_rwaccess: Option<String> = None;
                         let mut f_description: Option<String> = None;
                         let mut f_reset_value: Option<u64> = None;
@@ -603,9 +606,9 @@ pub fn process_peripheral_base<I, O>(
                             match attr_name.as_ref() {
                                 "id" => if value.len() > 0 { f_name = Some(value) },
                                 "range" => if value.len() > 0 { f_range = Some(value) },
-                                "begin" => if value.len() > 0 { f_begin = Some(value) },
-                                "width" => if value.len() > 0 { f_width = Some(value) },
-                                "end" => if value.len() > 0 { f_end = Some(value) },
+                                "begin" => if value.len() > 0 { f_begin = Some(u32::from_str(&value).unwrap()) },
+                                "width" => if value.len() > 0 { f_width = Some(u32::from_str(&value).unwrap()) },
+                                "end" => if value.len() > 0 { f_end = Some(u32::from_str(&value).unwrap()) },
                                 "rwaccess" => if value.len() > 0 { f_rwaccess = Some(value) },
                                 "description" => if value.len() > 0 { f_description = Some(value) }
                                 "resetval" => {
@@ -628,29 +631,38 @@ pub fn process_peripheral_base<I, O>(
                                 },
                             };
                         }
-                        if let Some(reset_value) = f_reset_value {
-                            if let Some(shift) = f_end.clone() {
-                                let shift_int = u32::from_str(&shift).unwrap();
+
+                        if let Some(end_int) = f_end {
+
+                            // Trust f_begin more than f_width
+                            if let Some(begin_int) = f_begin {
+                                f_width = Some(begin_int - end_int + 1)
+                            }
+
+                            if let Some(reset_value) = f_reset_value {
                                 let reg_width: u32 = register_width.unwrap_or(32);
 
-                                if let Some(width) = f_width.clone() {
-                                    let width_int = u32::from_str(&width).unwrap();
-                                    if shift_int + width_int > reg_width {
-                                        return Err(io::Error::new(io::ErrorKind::Other, format!("Field {:?} with offset {} and width {} too big for register of width {}.", f_name, shift_int, width_int, reg_width)));
+                                if let Some(width_int) = f_width {
+                                    if end_int + width_int > reg_width {
+                                        return Err(io::Error::new(io::ErrorKind::Other, format!("Field {:?} with offset {} and width {} too big for register of width {}.", f_name, end_int, width_int, reg_width)));
                                     }
                                 }
 
-                                if shift_int < reg_width {
-                                    let overflow = reset_value >> (reg_width - shift_int);
-                                    if overflow != 0 {
-                                        return Err(io::Error::new(io::ErrorKind::Other, format!("Resetval {} too big for field {:?}.", reset_value, f_name)));
-                                    }
-
-                                    let shifted_reset_value = reset_value << shift_int;
-                                    if let Some(rrv) = register_reset_value {
-                                        register_reset_value = Some(rrv | shifted_reset_value)
+                                if end_int < reg_width {
+                                    let overflow = reset_value >> (reg_width - end_int);
+                                    if overflow == 0 {
+                                        let shifted_reset_value = reset_value << end_int;
+                                        if let Some(rrv) = register_reset_value {
+                                            register_reset_value = Some(rrv | shifted_reset_value)
+                                        } else {
+                                            register_reset_value = Some(shifted_reset_value);
+                                        }
                                     } else {
-                                        register_reset_value = Some(shifted_reset_value);
+                                        if args.sanitize {
+                                            eprintln!("Resetval {} too big for field {:?}.", reset_value, f_name);
+                                        } else {
+                                            return Err(io::Error::new(io::ErrorKind::Other, format!("Resetval {} too big for field {:?}.", reset_value, f_name)));
+                                        }
                                     }
                                 }
                             }
@@ -661,21 +673,27 @@ pub fn process_peripheral_base<I, O>(
                         }
                         if let Some(description) = f_description {
                             if (f_begin != None) && (f_end != None) {
-                                let desc = format!("[{}:{}] {}", f_begin.clone().unwrap(), f_end.clone().unwrap(), description);
+                                let desc = format!("[{}:{}] {}", f_begin.unwrap(), f_end.unwrap(), description);
                                 write_tag(args, &mut xml_out, "description", &desc)?;
                             } else {
                                 write_tag(args, &mut xml_out, "description", if description.len() == 0 { "--" } else { &description })?;
                             }
                         }
+
                         if let Some(width) = f_width {
-                            write_tag(args, &mut xml_out, "bitWidth", &width)?;
+                            write_tag(args, &mut xml_out, "bitWidth", &width.to_string())?;
                         }
                         if let Some(end) = f_end {
-                            write_tag(args, &mut xml_out, "bitOffset", &end)?;
+                            write_tag(args, &mut xml_out, "bitOffset", &end.to_string())?;
                         }
-                        if let Some(range) = f_range {
-                            write_tag(args, &mut xml_out, "bitRange", &range)?;
+
+                        // bitRange unlikely to work with svd2rust
+                        if !args.sanitize {
+                            if let Some(range) = f_range {
+                                write_tag(args, &mut xml_out, "bitRange", &range)?;
+                            }
                         }
+
                         if let Some(_rwaccess) = f_rwaccess {
                             // NOTE: This is a workaround for svd2rust not handling "read" access.
                             //write_tag(args, &mut xml_out, "{}", process_access(rwaccess.as_ref()));
@@ -723,6 +741,11 @@ pub fn process_peripheral_base<I, O>(
                                 write_start(args, &mut xml_out, "enumeratedValue")?;
                                 if let Some(id) = f_id {
                                     write_tag(args, &mut xml_out, "name", &id)?;
+                                } else {
+                                    if args.sanitize {
+                                        // If id is missing, use value instead
+                                        write_tag(args, &mut xml_out, "name", &value)?;
+                                    }
                                 }
                                 write_tag(args, &mut xml_out, "value", &value)?;
                                 if let Some(description) = f_description {
