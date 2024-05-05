@@ -53,8 +53,8 @@ fn write_access<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, ti_acces
     O: io::Write,
 {
     let access = match ti_access {
-        "RO" => "read",
-        "WO" => "write",
+        "RO" => "read-only",
+        "WO" => "write-only",
         "RW" => "read-write",
         unknown => {
             if !args.silent {
@@ -632,6 +632,7 @@ pub fn process_peripheral_base<I, O>(
                             };
                         }
 
+
                         if let Some(end_int) = f_end {
 
                             // Trust f_begin more than f_width
@@ -693,10 +694,8 @@ pub fn process_peripheral_base<I, O>(
                                 write_tag(args, &mut xml_out, "bitRange", &range)?;
                             }
                         }
-
-                        if let Some(_rwaccess) = f_rwaccess {
-                            // NOTE: This is a workaround for svd2rust not handling "read" access.
-                            //write_tag(args, &mut xml_out, "{}", process_access(rwaccess.as_ref()));
+                        if let Some(rwaccess) = f_rwaccess {
+                            write_access(args, &mut xml_out, &rwaccess)?;
                         }
                     },
 
