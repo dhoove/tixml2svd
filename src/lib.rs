@@ -49,6 +49,19 @@ impl Args {
     }
 }
 
+fn get_name_from_description(description: &str) -> String {
+    let replaces = [
+        (',', '_'), ('.', '_'), (':', '\0'), ('/', '_'), ('#', '\0'), ('-', '_'), (' ', '_'),
+    ];
+    let mut name = description.replace('-', "").split_whitespace().take(3).collect::<Vec<&str>>().join("_");
+    name = name.split("#br#").next().unwrap_or("").to_string();
+    name = name.split(':').next().unwrap_or("").to_string();
+    for (from, to) in &replaces {
+        name = name.replace(&from.to_string(), &to.to_string());
+    }
+    name.to_uppercase()
+}
+
 fn write_access<O>(args: &Args, xml_out: &mut xml::EventWriter<&mut O>, ti_access: &str) -> io::Result<()> where
     O: io::Write,
 {
@@ -452,6 +465,7 @@ pub fn process_peripheral_base<I, O>(
     let mut f_used_registers = None;
 
     let mut f_used_enumerations = None;
+    let mut f_parent_reg_name = None;
 
     for e in parser {
         match e {
@@ -550,6 +564,7 @@ pub fn process_peripheral_base<I, O>(
                                 },
                                 None => id,
                             };
+                            f_parent_reg_name = Some(unique_name.clone());
                             write_tag(args, &mut xml_out, "name", &unique_name)?;
                         }
                         if let Some(value) = f_value {
@@ -665,6 +680,23 @@ pub fn process_peripheral_base<I, O>(
                                         }
                                     }
                                 }
+                            }
+                        }
+
+                        if f_name.is_none() && args.sanitize {
+                            if let Some(description) = f_description.clone() {
+                                f_name = Some(get_name_from_description(&description));
+                            }
+                            else {
+                                let parent_reg_name = f_parent_reg_name.clone();
+                                let bit_width = f_width;
+                                let bit_offset = f_end;
+
+                                // Create the formatted string
+                                let name_value = format!("{}_W{}_O{}", parent_reg_name.unwrap_or_default(), bit_width.unwrap_or_default(), bit_offset.unwrap_or_default());
+                                // Assign the formatted string to f_name
+                                f_name = Some(name_value);                         
+
                             }
                         }
 
