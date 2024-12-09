@@ -504,7 +504,8 @@ pub fn process_peripheral_base<I, O>(
                         let mut f_value: Option<String> = None;
                         let mut f_width: Option<String> = None;
                         let mut f_description: Option<String> = None;
-                        let mut f_rwaccess: Option<String> = None;
+                        // Assume access is read-write if not specified, and let further restrictions be applied by the bitfilelds
+                        let mut f_rwaccess: Option<String> = Some("RW".to_string());
                         let mut f_offset: Option<String> = None;
                         let mut f_resetval: Option<String> = None;
 
