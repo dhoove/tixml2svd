@@ -325,6 +325,8 @@ pub fn process_device_base<I, O>(
                             // If no ID present, ignore the module (TI-internal?)
                             if skip {
                                 eprintln!("Sub-instance href does not start with Modules, or is missing. Skipping: '{:?}'", id);
+                            } else if id == "Cp15" || id == "Vfp" {
+                                eprintln!("Peripheral id {:?} suggests co-processor registers; Ignoring", id);
                             } else {
                                 if id.len() > 0 {
                                     if !printed_peripherals_tag {
