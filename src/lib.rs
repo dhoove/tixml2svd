@@ -92,6 +92,14 @@ where
         "RO" => "read-only",
         "WO" => "write-only",
         "RW" => "read-write",
+        "R=1/W=0" => "read-only",
+        "R=0/W=1" => "write-only",
+        "R=1/W=1" => "read-write",
+        "R" => "read-only",
+        "W" => "write-only",
+        "R/W" => "read-write",
+        "R/W1TC" => "read-write",
+        "R/W1TS" => "read-write",
         unknown => {
             if !args.silent {
                 eprintln!("Ignoring unknown access key '{}'", unknown);
