@@ -87,10 +87,6 @@ provides sufficient information for the Segger Ozone debugger).
   <resetMask>0xFFFFFFFF</resetMask>
 ```
 
-## Credits
-
-- [nholstein](https://github.com/nholstein): Auto BOM detection, CPU header creation
-
 ## Devices
 
 This is an incomplete list of devices that, after
